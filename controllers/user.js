@@ -1,27 +1,13 @@
-const User = require("../models/users")
-const {errorHandler} = require('../helpers/dbErrorHandler')
+const User = require('../models/users')
 
-
-exports.signup =(req,res) => {
-console.log('req body', req.body);
-const user = new User(req.body);
-user.save((err,user) => {
-    if(err) {
-        return res.status(400).json({
-            err:errorHandler(err)
-        });
-    }
-
-    user.salt = undefined;
-    user.hashed_password = undefined;
-    res.json({
-        user
-    });
-})
-}
-
-exports.Julfikar = (req,res) => {
-    res.json({
-    
+exports.userById = (req, res, next, id) => {
+    User.findById(id).exec((err,user) => {
+        if(err || !user) {
+            return res.status(400).json({
+                error: "User not found"
+            });
+        }
+        req.profile = user
+        next();
     })
 }
