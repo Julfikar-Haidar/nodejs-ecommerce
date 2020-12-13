@@ -2,7 +2,7 @@ const User = require("../models/users")
 const jwt = require('jsonwebtoken'); //to generate signed token
 const expressJwt = require("express-jwt") // for authorization check
 const {errorHandler} = require('../helpers/dbErrorHandler');
-const { use } = require("../routes/auth");
+// const { use } = require("../routes/auth");
 
 exports.signup =(req,res) => {
 console.log('req body', req.body);
@@ -77,6 +77,7 @@ exports.requireSignin = expressJwt({
 
 
   exports.isAuth = (req, res, next) => {
+    // console.log('role', req.auth.iat)
       let user = req.profile && req.auth && req.profile._id == req.auth._id;
       if(!user) {
           return res.status(403).json({
@@ -91,6 +92,7 @@ exports.requireSignin = expressJwt({
 
 
   exports.isAdmin = (req, res, next) => {
+    //   console.log('role', req.profile.role)
       if(req.profile.role === 0) {
           return res.status(403).json({
               error: "Admin resource Access denied"
